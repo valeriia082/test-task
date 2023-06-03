@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formularz</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700" rel="stylesheet">
+
+    <style>
+
+        /* General styles */
+        body {
+            font-family: Montserrat;
+            margin: 0;
+        }
+
+        a {
+            color: #58A254;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* Form page container */
+        .form-page__container {
+            max-width: 1440px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        /* Form page */
+        .form-page {
+            width: 100%;
+            min-height: 100vh;
+            height: 100%;
+            -webkit-transition: background-color 0.5s;
+            -ms-transition: background-color 0.5s;
+            transition: background-color 0.5s;
+        }
+        /* Form page animation */
+        .form-page__animation {
+            animation: circle 9s infinite;
+            background: rgb(88 162 84 / 5%);
+            clip-path: circle(73%);
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            z-index: -1;
+        }
+
+        /* Button styles */
+        .button {
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+            padding: 12px 24px;
+            min-width: 120px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #58A254;
+            color: #FFFFFF;
+            position: relative;
+            transition: transform 0.5s;
+            -webkit-transition: transform 0.5s;
+            -ms-transition: transform 0.5s;
+        }
+
+        .form-page__button-container {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .user-form__button {
+            margin-top: 20px;
+        }
+
+        .button:after,
+        .button:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid #58A254;
+            transition: all .5s;
+            animation: clippath 3s infinite linear;
+            border-radius: 10px;
+        }
+        .button::after {
+            animation: clippath 3s infinite -1.5s linear;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+        }
+
+        /* User form */
+        .user-form {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 640px;
+            width: 100%;
+            min-height: 420px;
+            background: #fff;
+            color: #000;
+            padding: 50px;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0px 4px 30px rgb(0 0 0 / 30%);
+        }
+        .form-block__input {
+            font-size: 18px;
+            line-height: 26px;
+            font-weight: normal;
+            background: #FFFFFF;
+            border: 0.5px #D3D3D3 solid;
+            box-shadow: 0 3px 6px #0000000B;
+            font-family: inherit;
+            padding: 32px 13px 13px;
+            transition: border-color 0.4s ease;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+        .form-block__label {
+            font-size: 12px;
+            line-height: 1;
+            font-weight: inherit;
+            color: #111111;
+            opacity: 0.3;
+            padding: 13px;
+            position: absolute;
+            text-transform: uppercase;
+        }
+        .user-form__block {
+            margin-bottom: 20px;
+            position: relative;
+            text-align: left;
+        }
+
+        /* Checkbox style */
+        .form-block__checkbox-label {
+            font-size: 11px;
+            line-height: 1;
+            font-weight: inherit;
+            color: #707070;
+            opacity: 1;
+            text-transform: none;
+        }
+        .form-block__checkbox {
+            display: none;
+        }
+        .form-block__checkbox + .form-block__checkbox-label:before {
+            content: "";
+            border: 0.1em solid #707070;
+            border-radius: 0.2em;
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            padding-left: 0.2em;
+            padding-bottom: 0.3em;
+            margin-right: 0.2em;
+            vertical-align: bottom;
+            transition: .2s;
+        }
+        .form-block__checkbox:checked + .form-block__checkbox-label:before {
+            background-color: #58A254;
+            border-color: #58A254;
+            color: #fff;
+        }
+
+        /* Form response styles */
+        .form-response__title {
+            font-size: 20px;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .form-response__info {
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid rgb(88 162 84 / 80%);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        /* Error messages */
+        .form-block__error {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #f24d4d;
+        }
+        .form-block__input.error {
+            border-color: #f24d4d;
+        }
+        .form-block__checkbox-label.error:before {
+            border-color: #f24d4d;
+        }
+
+        /* Animation keyframes */
+        @keyframes circle {
+            0% {
+                clip-path: circle(75%);
+            }
+            50% {
+                clip-path: circle(25%);
+            }
+            100% {
+                clip-path: circle(75%);
+            }
+        }
+
+        @keyframes clippath {
+            0%,
+            100% {
+                clip-path: inset(0 0 98% 0);
+            }
+            25% {
+                clip-path: inset(0 98% 0 0);
+            }
+            50% {
+                clip-path: inset(98% 0 0 0);
+            }
+            75% {
+                clip-path: inset(0 0 0 98%);
+            }
+        }
+
+        /* Responsive styles for screen widths up to 768px */
+        @media screen and (max-width: 768px) {
+            .user-form {
+                width: 90%;
+                padding: 50px 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="form-page">
+    <div class="form-page__animation"></div>
+    <div class="form-page__container">
+        <div class="form-page__button-container">
+            <a href="" id="openForm" class="button button--open">Otwórz formularz</a>
+        </div>
+        <div id="userForm" class="user-form">
+            <form id="userFormForm" class="user-form__form">
+              <div class="user-form__block form-block">
+                <label for="name" class="form-block__label">Imię:</label>
+                <input type="text" id="name" name="name" required minlength="3" maxlength="70" class="form-block__input form-block__name">
+                <div class="form-block__error form-block__name-message"></div>
+
+              </div>
+              <div class="user-form__block form-block">
+                <label for="email" class="form-block__label">Adres e-mail:</label>
+                <input type="email" id="email" name="email" required class="form-block__input form-block__email">
+                <div class="form-block__error form-block__email-message"></div>
+              </div>
+              <div class="user-form__block form-block">
+                <input type="checkbox" id="checkbox" required class="form-block__checkbox">
+                <label for="checkbox" class="form-block__checkbox-label">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                    It has survived not only five centuries, but also the leap into electronic typesetting,
+                    remaining <a target="_blank" href="https://www.google.pl/">essentially unchanged</a>.
+                </label>
+                <div class="form-block__error form-block__checkbox-message"></div>
+
+              </div>
+                <button type="button" id="sendButton" class="button user-form__button">Wyślij</button>
+            </form>
+            <div class="user-form__response form-response"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        $('#openForm').click(function(e) {
+            e.preventDefault();
+            $('#userForm').fadeIn();
+            $('.form-page').css('background-color', 'rgb(0 0 0 / 15%)');
+        });
+
+        $('.form-page').click(function(e) {
+            if (e.target === this) {
+                $('#userForm').fadeOut();
+                $(this).css('background-color', 'rgb(0 0 0 / 0)');
+            }
+        });
+
+        $('#sendButton').click(function(e) {
+            e.preventDefault();
+            validateForm();
+        });
+
+        $('#name').keyup(function() {
+            validateName($(this).val());
+        });
+
+        $('#email').keyup(function() {
+            validateEmail($(this).val());
+        });
+
+        $('#checkbox').change(function() {
+            validateCheckbox($(this).prop('checked') ? 'tak' : 'nie');
+        });
+
+        function validateForm() {
+            var name = $('#name').val();
+            var email = $('#email').val();
+            var checkbox = $('#checkbox').prop('checked') ? 'tak' : 'nie';
+
+            var nextStepName = validateName(name);
+            var nextStepEmail = validateEmail(email);
+            var nextStepCheckbox = validateCheckbox(checkbox);
+
+            if (nextStepEmail && nextStepName && nextStepCheckbox) {
+                var formData = {
+                    name: name,
+                    email: email,
+                    checkbox: checkbox
+                };
+
+                $.ajax({
+                    url: 'post.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        console.log(response);
+                        $('#userFormForm').hide();
+                        displaySuccessMessage(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
+        }
+
+        function validateName(name) {
+            if (name.length === 0) {
+                $('.form-block__name-message').text("To pole jest wymagane.");
+                $('.form-block__name').addClass("error");
+                return false;
+            } else if (name.length < 3 || name.length > 70) {
+                $('.form-block__name-message').text("Imię musi mieć od 3 do 70 znaków.");
+                $('.form-block__name').addClass("error");
+                return false;
+            } else {
+                $('.form-block__name-message').text("");
+                $('.form-block__name').removeClass("error");
+                return true;
+            }
+        }
+
+        function validateEmail(email) {
+            if (email.length === 0) {
+                $('.form-block__email-message').text("To pole jest wymagane.");
+                $('.form-block__email').addClass("error");
+                return false;
+            } else if (!emailRegex.test(email)) {
+                $('.form-block__email-message').text("Wprowadź poprawny adres e-mail. Np. email@gmail.com");
+                $('.form-block__email').addClass("error");
+                return false;
+            } else {
+                $('.form-block__email-message').text("");
+                $('.form-block__email').removeClass("error");
+                return true;
+            }
+        }
+
+        function validateCheckbox(checkbox) {
+            if (checkbox === "nie") {
+                $('.form-block__checkbox-message').text("Musisz zaakceptować zgody marketingowe.");
+                $('.form-block__checkbox-label').addClass("error");
+                return false;
+            } else {
+                $('.form-block__checkbox-message').text("");
+                $('.form-block__checkbox-label').removeClass("error");
+                return true;
+            }
+        }
+
+        function displaySuccessMessage(response) {
+            $('.user-form__response').append('<div class="form-response__title">Dane zostały wysłane!</div>');
+            $('.user-form__response').append('<div class="form-response__info"><strong>Imię:</strong> ' + response.name + '</div>');
+            $('.user-form__response').append('<div class="form-response__info"><strong>Adres e-mail:</strong> ' + response.email + '</div>');
+            $('.user-form__response').append('<div class="form-response__info"><strong>Zgoda:</strong> ' + response.checkbox + '</div>');
+            $('.user-form__response').append('<div class="form-response__info"><strong>JSON Data:</strong> ' + JSON.stringify(response,  undefined, 2) + '</div>');
+        }
+    });
+
+</script>
+</body>
+</html>
